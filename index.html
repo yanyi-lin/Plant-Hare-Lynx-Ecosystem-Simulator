@@ -313,7 +313,8 @@
 <div class="dashboard">
     <div class="title-row">
         <h1>植物、雪兔和猞猁种群的周期性波动</h1>
-        <button class="info-btn" id="infoModalBtn" aria-label="关于模型">?</button>
+        <!-- 按钮字符改为 "i" -->
+        <button class="info-btn" id="infoModalBtn" aria-label="关于模型">i</button>
     </div>
 
     <div class="main-layout">
@@ -363,8 +364,14 @@
 
 <div id="infoModal" class="modal-overlay">
     <div class="modal-content">
-        <!-- 按用户要求换行，并修正“生物与环境” -->
-        <p>生态学演示器<br>基于<br>普通高中教科书生物学选择性必修2生物与环境<br>和<br>Lotka-Volterra三营养模型</p>
+        <!-- 已删除开源协议文本，仅保留制作者信息 -->
+        <p>生态学演示器<br>基于<br>普通高中教科书生物学选择性必修2生物与环境<br>和<br>Lotka-Volterra三营养模型
+        <br>
+        <br><strong>制作者：</strong><br>
+        林炎逸
+        <br>
+        刘子木
+        </p>
         <button class="close-modal" id="closeModalBtn">关闭</button>
     </div>
 </div>
@@ -372,6 +379,7 @@
 <script>
     // ========================= 彩蛋：隐藏注释 =========================
     // 200809190820131209190405220512151605040225120914250114250919202104051420150625160726
+    // AGPL-3.0
     // =================================================================
 
     // ----------------------------- 改进模型参数：确保雪兔数量明显高于猞猁，同时保持周期性 -------------------------
