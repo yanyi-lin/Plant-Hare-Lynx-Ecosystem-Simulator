@@ -1,40 +1,135 @@
-# The Rabbit, the Fox, and the Plants
+# 生态学教学演示：植物-雪兔-猞猁种群动态模型
 
-Welcome to _The Rabbit, the Fox, and the Plants_ repository!
+基于 **Lotka-Volterra 三营养级模型** 的高中生物学教学互动演示工具。  
+直观展示植物、雪兔和猞猁三种群在捕食关系下的周期性波动，并支持生态扰动实验，帮助理解生态系统的自我调节能力。
 
-## Overview
+---
 
-A brief description of the project goes here.  
-(Example: This project is a story-driven application or game featuring interactions between a rabbit, a fox, and various plants. It may serve as an educational tool, a game, or a creative writing exploration—customize as appropriate.)
+## 📖 项目简介
 
-## Features
+本项目是一个纯前端交互式 Web 应用，专为高中生物教学（选择性必修2《生物与环境》）设计。  
+通过模拟 **植物 → 雪兔 → 猞猁** 三条营养链的种群动态，学生可以：
 
-- Engaging storyline or gameplay mechanics
-- Multiple characters: the rabbit, the fox, and the plants
-- (List additional features as relevant)
+- 观察种群数量的周期性振荡；
+- 点击“生态扰动”按钮，模拟某一物种数量减少 10% 后的恢复过程；
+- 控制模拟的启停与重置，直观对比不同阶段的变化。
 
-## Getting Started
+所有计算基于经典的 Lotka-Volterra 微分方程，并设置了种群最小值防止灭绝，保证模拟的生态合理性。
 
-1. **Clone this repository:**
-   ```bash
-   git clone https://github.com/yanyi-lin/the-rabbit-the-fox-and-the-plants.git
-   ```
-2. **Install dependencies:**  
-   (Add specific instructions here if your project uses a language or package manager.)
+---
 
-3. **Run the project:**  
-   (Provide commands or instructions, if applicable.)
+## ✨ 功能特点
 
-## Contributing
+- **三物种实时动态曲线**：将植物、雪兔、猞猁的种群密度变化绘制在同一张图表中，便于对比相位关系。
+- **交互控制**：
+  - ⏸️/▶️ 暂停/继续模拟
+  - 🔄 重置模拟（恢复初始状态）
+- **生态扰动按钮**：
+  - 🌱 植物减少 10%
+  - 🐇 雪兔减少 10%
+  - 🐆 猞猁减少 10%  
+  点击后对应物种数量立即减少（不低于最小值），系统将自动调节，展现恢复力。
+- **图例与比例尺**：右侧面板说明各物种的显示范围，并解释 Y 轴截断（植物实际值可能超出 110，但模型计算不变，仅调整视觉刻度以突出捕食者-猎物关系）。
+- **模型信息弹窗**：点击标题旁“？”按钮，展示模型依据的教材版本与理论来源。
+- **防止灭绝机制**：各物种均有极小阈值，模拟不会出现负值或完全灭绝，保持曲线连贯。
 
-Contributions are welcome!  
-Please open an issue or submit a pull request.
+---
 
-## License
+## 🚀 使用方法
 
-Specify your license here.  
-Example: [MIT License](LICENSE)
+1. **直接打开**：将提供的 `index.html` 文件下载到本地，使用现代浏览器（Chrome、Edge、Firefox 等）打开即可运行，无需安装任何依赖或服务器。
+2. **操作流程**：
+   - 页面初始显示初始种群（植物 98、雪兔 38、猞猁 9.5），模拟未启动。
+   - 点击 **“开始模拟”** 按钮，动态曲线开始绘制。
+   - 点击 **“暂停”** 可暂定积分，再次点击继续。
+   - 点击 **“重置模拟”** 回到初始状态并停止运行。
+   - 任意时刻点击下方 **生态扰动按钮**，立即减少对应物种当前数量的 10%，曲线将随之变化。
+3. **观察要点**：
+   - 雪兔数量始终高于猞猁，符合生态金字塔规律。
+   - 植物、雪兔、猞猁三者峰值依次滞后，呈经典捕食者-猎物振荡模式。
+   - 扰动后种群会逐渐恢复原有波动模式，体现系统稳定性。
 
-## Contact
+---
 
-For questions or suggestions, please contact [yanyi-lin](https://github.com/yanyi-lin).
+## 🧠 数学模型与参数
+
+### Lotka-Volterra 三物种方程
+
+| 物种   | 微分方程 |
+|--------|----------|
+| 植物 (P) | `dP/dt = r·P·(1 - P/K) - a·P·H` |
+| 雪兔 (H) | `dH/dt = e·a·P·H - d·H - b·H·L` |
+| 猞猁 (L) | `dL/dt = f·b·H·L - m·L` |
+
+### 模型参数
+
+| 参数 | 含义 | 取值 |
+|------|------|------|
+| r    | 植物内禀增长率 | 0.30 |
+| K    | 植物环境容纳量 | 280 |
+| a    | 雪兔对植物的捕食率 | 0.011 |
+| e    | 植物转化为雪兔的效率 | 0.72 |
+| d    | 雪兔自然死亡率 | 0.20 |
+| b    | 猞猁对雪兔的捕食率 | 0.013 |
+| f    | 雪兔转化为猞猁的效率 | 0.42 |
+| m    | 猞猁自然死亡率 | 0.12 |
+
+- 数值积分采用欧拉方法，步长 `dt = 0.045`。
+- 种群最小值：植物 1.2、雪兔 0.35、猞猁 0.18，防止数值灭绝。
+- 图表 Y 轴固定为 0～110，植物实际值可能超过此范围（但模型内部计算不受影响），这样做是为了让雪兔和猞猁曲线更清晰，同时强调捕食者-猎物关系的相对变化。
+
+---
+
+## 🎨 界面布局
+
+- **左侧**：种群动态曲线图 + 控制按钮（暂停/开始、重置）。
+- **右侧上半部分**：图例与显示比例尺，说明各物种曲线颜色及 Y 轴显示范围。
+- **右侧下半部分**：三个生态扰动按钮。
+- **标题栏右侧**：圆形“?”按钮，点击弹出模型说明。
+
+布局采用黄金比例设计，适应不同屏幕尺寸。
+
+---
+
+## 🛠️ 技术栈
+
+- HTML5 + CSS3（Flexbox、Grid）
+- JavaScript (ES6)
+- [Chart.js](https://www.chartjs.org/) 4.4.0 — 动态图表渲染
+- 无后端，纯前端模拟
+
+---
+
+## 📁 文件说明
+
+- `index.html` — 唯一文件，包含所有样式、脚本和结构。
+- 无需额外资源，所有依赖通过 CDN 引入。
+
+---
+
+## 📝 教学建议
+
+1. **课前引入**：展示初始曲线，让学生预测接下来三个种群的变化趋势。
+2. **课堂互动**：分别点击三个扰动按钮，让学生分组讨论扰动后系统的响应，并记录恢复周期。
+3. **课后拓展**：可引导学生尝试修改代码中的参数（如捕食率、出生率），观察模型敏感性（需具备一定编程基础）。
+
+---
+
+## ⚠️ 注意事项
+
+- 图表 Y 轴最大值设为 110，植物真实密度可能达到 270 左右，超出部分会在图表顶部被截断。这是故意设计，以便更清晰地显示雪兔和猞猁的变化趋势。如需查看植物完整曲线，可自行修改 `y.max` 值。
+- 模拟时间步长固定，长时间运行曲线会自动滚动，保留最近约 260 个时间点。
+- 所有扰动均在当前时刻生效，且不影响积分连续性。
+
+---
+
+## 📄 许可证
+
+本项目仅供教学与学习交流使用，可自由修改和分发。
+
+---
+
+## 🙏 致谢
+
+模型依据普通高中教科书《生物学 选择性必修2 生物与环境》中“种群的数量变化”相关内容，结合 Lotka-Volterra 捕食者-猎物模型设计。  
+感谢 Chart.js 团队提供优秀的图表库。
