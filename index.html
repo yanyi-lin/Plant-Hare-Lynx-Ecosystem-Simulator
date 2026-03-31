@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>生态学教学演示：植物-雪兔-猞猁种群动态模型 | Lotka-Volterra 三物种模拟</title>
-    <!-- Chart.js CDN 用于动态图表 -->
+    <title>生态学教学演示：植物-雪兔-猞猁种群动态模型</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- ========================= 彩蛋：隐藏注释 ========================= -->
+    <!-- 200809190820131209190405220512151605040225120914250114250919202104051420150625160726 -->
+    <!-- AGPL-3.0 -->
+    <!-- ================================================================= -->
     <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
-
+        * { box-sizing: border-box; user-select: none; }
         body {
-            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', 'Roboto', system-ui;
             background: #f0f7f0;
             margin: 0;
             padding: 20px;
@@ -22,18 +21,14 @@
             justify-content: center;
             align-items: center;
         }
-
         .dashboard {
             max-width: 1400px;
             width: 100%;
             background: white;
             border-radius: 2rem;
             box-shadow: 0 20px 35px -12px rgba(0, 32, 0, 0.2);
-            overflow: hidden;
-            padding: 1.5rem 2rem 2rem 2rem;
-            transition: all 0.2s;
+            padding: 1.5rem 2rem 2rem;
         }
-
         .title-row {
             display: flex;
             justify-content: space-between;
@@ -47,7 +42,6 @@
             font-weight: 600;
             margin: 0;
             color: #1a3c2c;
-            letter-spacing: -0.3px;
             border-bottom: 3px solid #8bc34a;
             display: inline-block;
             padding-bottom: 8px;
@@ -65,37 +59,11 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            font-family: inherit;
         }
-        .info-btn:hover {
-            background-color: #c8e0bb;
-            transform: scale(1.02);
-            border-color: #5f8b4a;
-        }
-        .info-btn:active {
-            transform: scale(0.98);
-        }
-
-        .main-layout {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.8rem;
-        }
-
-        .left-chart-area {
-            flex: 3;
-            min-width: 280px;
-        }
-
-        .chart-controls {
-            display: flex;
-            gap: 1.2rem;
-            margin-bottom: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .info-btn:hover { background-color: #c8e0bb; transform: scale(1.02); }
+        .main-layout { display: flex; flex-wrap: wrap; gap: 1.8rem; }
+        .left-chart-area { flex: 3; min-width: 280px; }
+        .chart-controls { display: flex; gap: 1.2rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .ctrl-btn {
             background: #2c5e3a;
             border: none;
@@ -106,29 +74,11 @@
             border-radius: 48px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             font-family: inherit;
         }
-        .ctrl-btn:hover {
-            background: #1f452b;
-            transform: scale(0.98);
-        }
-        .ctrl-btn:active {
-            background: #0f2a1a;
-        }
-        .ctrl-btn.secondary {
-            background: #4e6b3c;
-        }
-        .ctrl-btn.secondary:hover {
-            background: #3a522b;
-        }
-        .ctrl-btn:disabled {
-            background: #b1cfb0;
-            cursor: not-allowed;
-            transform: none;
-            opacity: 0.7;
-        }
-
+        .ctrl-btn:hover { background: #1f452b; transform: scale(0.98); }
+        .ctrl-btn.secondary { background: #4e6b3c; }
+        .ctrl-btn:disabled { background: #b1cfb0; cursor: not-allowed; opacity: 0.7; }
         .chart-container {
             background: #fefef7;
             border-radius: 1.2rem;
@@ -136,58 +86,25 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             border: 1px solid #dde6d5;
         }
-        canvas {
-            width: 100%;
-            height: auto;
-            max-height: 460px;
-        }
-
+        canvas { width: 100%; height: auto; max-height: 460px; }
         .right-panel {
             flex: 1.2;
-            min-width: 260px;
+            min-width: 280px;
             background: #fefef5;
             border-radius: 1.5rem;
             box-shadow: 0 8px 18px rgba(60, 40, 20, 0.08);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             border: 1px solid #e2ecd9;
             overflow: hidden;
         }
-
         .legend-section {
-            padding: 1.5rem 1.2rem 1rem 1.2rem;
+            padding: 1.5rem 1.2rem 1rem;
             background: #ffffffdb;
             border-bottom: 1px dashed #cbdcc2;
         }
-        .legend-title {
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: #2c4b32;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .legend-item {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: 1.1rem;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .color-badge {
-            width: 28px;
-            height: 18px;
-            border-radius: 20px;
-            margin-right: 8px;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
-        }
-        .species-name {
-            font-weight: 600;
-            width: 48px;
-            font-size: 1rem;
-        }
+        .legend-title { font-weight: 700; font-size: 1.2rem; margin-bottom: 1rem; color: #2c4b32; }
+        .legend-item { display: flex; align-items: baseline; margin-bottom: 0.8rem; gap: 8px; }
+        .color-badge { width: 28px; height: 18px; border-radius: 20px; margin-right: 8px; }
+        .species-name { font-weight: 600; width: 48px; font-size: 1rem; }
         .scale-info {
             font-size: 0.85rem;
             color: #3a5e3f;
@@ -204,44 +121,45 @@
             border-top: 1px solid #e2e9db;
             padding-top: 8px;
         }
-
         .disturb-section {
-            padding: 1.2rem 1.2rem 1.8rem 1.2rem;
+            padding: 1rem 1.2rem 1.5rem;
             background: #f9faf3;
         }
-        .disturb-title {
-            font-weight: 700;
+        .disturb-title { font-weight: 700; margin-bottom: 1rem; font-size: 1.1rem; color: #33553d; text-align: center; }
+        .disturb-group {
             margin-bottom: 1rem;
-            font-size: 1.1rem;
-            color: #33553d;
-            text-align: center;
+            border-bottom: 1px solid #e0e8d8;
+            padding-bottom: 0.8rem;
         }
-        .disturb-buttons {
+        .disturb-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .group-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
             display: flex;
-            flex-direction: column;
-            gap: 0.9rem;
+            align-items: center;
+            gap: 6px;
+        }
+        .button-row {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
         }
         .disturb-btn {
             background: #c7ddb5;
             border: none;
-            padding: 10px 0;
-            border-radius: 60px;
+            padding: 6px 12px;
+            border-radius: 40px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #1e3a2a;
-            transition: 0.15s;
             cursor: pointer;
             font-family: inherit;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 60px;
+            transition: 0.1s;
         }
-        .disturb-btn:hover {
-            background: #b3cf99;
-            transform: translateY(-2px);
-        }
-        .disturb-btn:active {
-            background: #9aba81;
-        }
-
+        .disturb-btn:hover { background: #b3cf99; transform: translateY(-1px); }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -261,51 +179,15 @@
             max-width: 460px;
             width: 90%;
             padding: 1.8rem 2rem 2rem;
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
             text-align: center;
-            position: relative;
             border-top: 8px solid #8bc34a;
         }
-        .modal-content p {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            color: #1f3b2c;
-            margin: 1.2rem 0 1.8rem;
-        }
-        .close-modal {
-            background: #2c5e3a;
-            color: white;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .close-modal:hover {
-            background: #1f452b;
-        }
-
+        .close-modal { background: #2c5e3a; color: white; border: none; padding: 8px 24px; border-radius: 40px; font-size: 1rem; font-weight: bold; cursor: pointer; }
         @media (max-width: 780px) {
-            .dashboard {
-                padding: 1rem;
-            }
-            .ctrl-btn {
-                padding: 6px 18px;
-                font-size: 0.9rem;
-            }
-            .legend-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .title-row {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
+            .dashboard { padding: 1rem; }
+            h1 { font-size: 1.5rem; }
+            .button-row { gap: 0.4rem; }
+            .disturb-btn { padding: 5px 8px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -313,10 +195,8 @@
 <div class="dashboard">
     <div class="title-row">
         <h1>植物、雪兔和猞猁种群的周期性波动</h1>
-        <!-- 按钮字符改为 "i" -->
-        <button class="info-btn" id="infoModalBtn" aria-label="关于模型">i</button>
+        <button class="info-btn" id="infoModalBtn">i</button>
     </div>
-
     <div class="main-layout">
         <div class="left-chart-area">
             <div class="chart-controls">
@@ -324,39 +204,58 @@
                 <button id="startResetBtn" class="ctrl-btn secondary">▶️ 开始模拟</button>
             </div>
             <div class="chart-container">
-                <canvas id="populationChart" width="800" height="450" style="width:100%; height:auto; max-height:450px"></canvas>
+                <canvas id="populationChart" width="800" height="450"></canvas>
             </div>
         </div>
 
         <div class="right-panel">
             <div class="legend-section">
-                <div class="legend-title">📊 种群图例 & 显示比例尺</div>
+                <div class="legend-title">📊 双Y轴说明</div>
                 <div class="legend-item">
                     <div class="color-badge" style="background: #2e7d32;"></div>
                     <span class="species-name">植物</span>
-                    <span class="scale-info">显示范围: 0 ~ 110</span>
+                    <span class="scale-info">左轴 0~350</span>
                 </div>
                 <div class="legend-item">
                     <div class="color-badge" style="background: #1e88e5;"></div>
                     <span class="species-name">雪兔</span>
-                    <span class="scale-info">显示范围: 0 ~ 95</span>
+                    <span class="scale-info">右轴 0~100</span>
                 </div>
                 <div class="legend-item">
                     <div class="color-badge" style="background: #e53935;"></div>
                     <span class="species-name">猞猁</span>
-                    <span class="scale-info">显示范围: 0 ~ 38</span>
+                    <span class="scale-info">右轴 0~100</span>
                 </div>
-                <div class="note">※ Y轴统一显示0~110（植物实际数值可能超出此范围，但模型计算不变，仅调整视觉刻度以突出捕食者-猎物相对关系）<br>雪兔和猞猁曲线完全可见，植物超出部分被截断，但周期性仍清晰可辨。</div>
+                <div class="note">※ 植物左轴，雪兔和猞猁右轴。雪兔数量始终高于猞猁，曲线清晰区分。</div>
             </div>
 
             <div class="disturb-section">
-                <div class="disturb-title">⚡ 生态扰动 (减少10%种群)</div>
-                <div class="disturb-buttons">
-                    <button id="disturbPlantBtn" class="disturb-btn">🌱 植物减少10%</button>
-                    <button id="disturbHareBtn" class="disturb-btn">🐇 雪兔减少10%</button>
-                    <button id="disturbLynxBtn" class="disturb-btn">🐆 猞猁减少10%</button>
+                <div class="disturb-title">⚡ 生态扰动 (减少种群百分比)</div>
+                <div class="disturb-group">
+                    <div class="group-label"><span style="display:inline-block; width:12px; height:12px; background:#2e7d32; border-radius:2px;"></span> 植物</div>
+                    <div class="button-row">
+                        <button class="disturb-btn" data-species="plant" data-percent="0.1">10%</button>
+                        <button class="disturb-btn" data-species="plant" data-percent="0.3">30%</button>
+                        <button class="disturb-btn" data-species="plant" data-percent="0.5">50%</button>
+                    </div>
                 </div>
-                <div class="note" style="margin-top:12px;">点击后即时减少当前种群10% (不低于最小值)，系统自动调节展现恢复力与周期性</div>
+                <div class="disturb-group">
+                    <div class="group-label"><span style="display:inline-block; width:12px; height:12px; background:#1e88e5; border-radius:2px;"></span> 雪兔</div>
+                    <div class="button-row">
+                        <button class="disturb-btn" data-species="hare" data-percent="0.1">10%</button>
+                        <button class="disturb-btn" data-species="hare" data-percent="0.3">30%</button>
+                        <button class="disturb-btn" data-species="hare" data-percent="0.5">50%</button>
+                    </div>
+                </div>
+                <div class="disturb-group">
+                    <div class="group-label"><span style="display:inline-block; width:12px; height:12px; background:#e53935; border-radius:2px;"></span> 猞猁</div>
+                    <div class="button-row">
+                        <button class="disturb-btn" data-species="lynx" data-percent="0.1">10%</button>
+                        <button class="disturb-btn" data-species="lynx" data-percent="0.3">30%</button>
+                        <button class="disturb-btn" data-species="lynx" data-percent="0.5">50%</button>
+                    </div>
+                </div>
+                <div class="note">点击后即时减少当前种群对应百分比（不低于最小阈值），系统自动调节展现恢复力与周期性</div>
             </div>
         </div>
     </div>
@@ -364,7 +263,6 @@
 
 <div id="infoModal" class="modal-overlay">
     <div class="modal-content">
-        <!-- 已删除开源协议文本，仅保留制作者信息 -->
         <p>生态学演示器<br>基于<br>普通高中教科书生物学选择性必修2生物与环境<br>和<br>Lotka-Volterra三营养模型
         <br>
         <br><strong>制作者：</strong><br>
@@ -377,100 +275,79 @@
 </div>
 
 <script>
-    // ========================= 彩蛋：隐藏注释 =========================
-    // 200809190820131209190405220512151605040225120914250114250919202104051420150625160726
-    // AGPL-3.0
-    // =================================================================
-
-    // ----------------------------- 改进模型参数：确保雪兔数量明显高于猞猁，同时保持周期性 -------------------------
-    const r = 0.30;
+    // 修正参数：雪兔始终高于猞猁，保持相位正确
+    const r = 0.28;
     const K = 280;
-    const a = 0.011;
-    const e = 0.72;
-    const d = 0.20;
-    const b = 0.013;
-    const f = 0.42;
-    const m = 0.12;
+    const a = 0.009;
+    const e = 0.68;
+    const d = 0.22;
+    const b = 0.016;
+    const f = 0.45;
+    const m = 0.10;
     const dt = 0.045;
     const MAX_DATA_POINTS = 260;
     const MIN_PLANT = 1.2;
-    const MIN_HARE = 0.35;
-    const MIN_LYNX = 0.18;
-    
-    let P = 98.0;
-    let H = 38.0;
-    let L = 9.5;
+    const MIN_HARE = 0.5;
+    const MIN_LYNX = 0.2;
+
+    let P = 150.0;
+    let H = 42.0;
+    let L = 8.0;
     let currentTime = 0.0;
-    
+
     let timeData = [0];
     let plantData = [P];
     let hareData = [H];
     let lynxData = [L];
-    
+
     let simulationRunning = false;
     let simulationActive = false;
     let timerId = null;
-    
     let chart;
-    
+
     const playPauseBtn = document.getElementById('playPauseBtn');
     const startResetBtn = document.getElementById('startResetBtn');
-    const disturbPlantBtn = document.getElementById('disturbPlantBtn');
-    const disturbHareBtn = document.getElementById('disturbHareBtn');
-    const disturbLynxBtn = document.getElementById('disturbLynxBtn');
-    
     const modalOverlay = document.getElementById('infoModal');
     const infoBtn = document.getElementById('infoModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
-    
-    function showModal() {
-        modalOverlay.style.display = 'flex';
-    }
-    function hideModal() {
-        modalOverlay.style.display = 'none';
-    }
-    
+
+    function showModal() { modalOverlay.style.display = 'flex'; }
+    function hideModal() { modalOverlay.style.display = 'none'; }
+
     function derivatives(p, h, l) {
         let dP = r * p * (1 - p / K) - a * p * h;
         let dH = e * a * p * h - d * h - b * h * l;
         let dL = f * b * h * l - m * l;
         return { dP, dH, dL };
     }
-    
+
     function stepSimulation() {
         if (!simulationRunning) return;
-        
         let { dP, dH, dL } = derivatives(P, H, L);
         let newP = P + dP * dt;
         let newH = H + dH * dt;
         let newL = L + dL * dt;
-        
         newP = Math.max(MIN_PLANT, newP);
         newH = Math.max(MIN_HARE, newH);
         newL = Math.max(MIN_LYNX, newL);
-        
-        if (newP > K * 1.2) newP = K * 1.15;
-        
+        if (newP > K * 1.2) newP = K * 1.2;
         P = newP;
         H = newH;
         L = newL;
         currentTime += dt;
-        
         timeData.push(currentTime);
         plantData.push(P);
         hareData.push(H);
         lynxData.push(L);
-        
         while (timeData.length > MAX_DATA_POINTS) {
             timeData.shift();
             plantData.shift();
             hareData.shift();
             lynxData.shift();
         }
-        
         updateChart();
     }
-    
+
     function updateChart() {
         if (!chart) return;
         chart.data.datasets[0].data = [...plantData];
@@ -479,25 +356,19 @@
         chart.data.labels = [...timeData.map(t => t.toFixed(1))];
         chart.update('none');
     }
-    
+
     function fullReset() {
-        if (timerId) {
-            clearInterval(timerId);
-            timerId = null;
-        }
+        if (timerId) { clearInterval(timerId); timerId = null; }
         simulationRunning = false;
         simulationActive = false;
-        
-        P = 98.0;
-        H = 38.0;
-        L = 9.5;
+        P = 150.0;
+        H = 42.0;
+        L = 8.0;
         currentTime = 0.0;
-        
         timeData = [0];
         plantData = [P];
         hareData = [H];
         lynxData = [L];
-        
         if (chart) {
             chart.data.datasets[0].data = [...plantData];
             chart.data.datasets[1].data = [...hareData];
@@ -505,75 +376,61 @@
             chart.data.labels = ["0"];
             chart.update();
         }
-        
         startResetBtn.textContent = "▶️ 开始模拟";
         startResetBtn.classList.remove("secondary");
         startResetBtn.classList.add("ctrl-btn");
-        
         playPauseBtn.textContent = "⏸️ 暂停";
         playPauseBtn.disabled = true;
-        
         simulationRunning = false;
         simulationActive = false;
     }
-    
+
     function startSimulation() {
         if (timerId) clearInterval(timerId);
         simulationRunning = true;
         simulationActive = true;
-        timerId = setInterval(() => {
-            stepSimulation();
-        }, 38);
-        
+        timerId = setInterval(() => stepSimulation(), 38);
         startResetBtn.textContent = "🔄 重置模拟";
         startResetBtn.classList.remove("secondary");
         startResetBtn.classList.add("ctrl-btn");
         playPauseBtn.disabled = false;
         playPauseBtn.textContent = "⏸️ 暂停";
     }
-    
+
     function pauseSimulation() {
-        if (timerId) {
-            clearInterval(timerId);
-            timerId = null;
-        }
+        if (timerId) { clearInterval(timerId); timerId = null; }
         simulationRunning = false;
         playPauseBtn.textContent = "▶️ 开始";
     }
-    
+
     function resumeSimulation() {
         if (timerId) clearInterval(timerId);
         simulationRunning = true;
-        timerId = setInterval(() => {
-            stepSimulation();
-        }, 38);
+        timerId = setInterval(() => stepSimulation(), 38);
         playPauseBtn.textContent = "⏸️ 暂停";
     }
-    
+
     function togglePlayPause() {
         if (!simulationActive) return;
-        if (simulationRunning) {
-            pauseSimulation();
-        } else {
-            resumeSimulation();
-        }
+        if (simulationRunning) pauseSimulation();
+        else resumeSimulation();
     }
-    
-    function applyDisturbance(target) {
-        if (target === 'plant') {
-            let newVal = P * 0.9;
+
+    function applyDisturbance(species, percent) {
+        let newVal;
+        if (species === 'plant') {
+            newVal = P * (1 - percent);
             newVal = Math.max(MIN_PLANT, newVal);
             P = newVal;
-        } else if (target === 'hare') {
-            let newVal = H * 0.9;
+        } else if (species === 'hare') {
+            newVal = H * (1 - percent);
             newVal = Math.max(MIN_HARE, newVal);
             H = newVal;
-        } else if (target === 'lynx') {
-            let newVal = L * 0.9;
+        } else if (species === 'lynx') {
+            newVal = L * (1 - percent);
             newVal = Math.max(MIN_LYNX, newVal);
             L = newVal;
         }
-        
         if (plantData.length > 0) {
             plantData[plantData.length - 1] = P;
             hareData[hareData.length - 1] = H;
@@ -584,18 +441,14 @@
             lynxData = [L];
             timeData = [currentTime];
         }
-        
         updateChart();
     }
-    
+
     function handleStartReset() {
-        if (!simulationActive) {
-            startSimulation();
-        } else {
-            fullReset();
-        }
+        if (!simulationActive) startSimulation();
+        else fullReset();
     }
-    
+
     function initChart() {
         const ctx = document.getElementById('populationChart').getContext('2d');
         chart = new Chart(ctx, {
@@ -603,123 +456,54 @@
             data: {
                 labels: ["0"],
                 datasets: [
-                    {
-                        label: '🌿 植物种群',
-                        data: [P],
-                        borderColor: '#2e7d32',
-                        backgroundColor: 'transparent',
-                        borderWidth: 2.8,
-                        tension: 0.2,
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        fill: false,
-                        order: 1
-                    },
-                    {
-                        label: '🐇 雪兔种群',
-                        data: [H],
-                        borderColor: '#1e88e5',
-                        backgroundColor: 'transparent',
-                        borderWidth: 2.8,
-                        tension: 0.2,
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        fill: false,
-                        order: 2
-                    },
-                    {
-                        label: '🐆 猞猁种群',
-                        data: [L],
-                        borderColor: '#e53935',
-                        backgroundColor: 'transparent',
-                        borderWidth: 2.8,
-                        tension: 0.2,
-                        pointRadius: 0,
-                        pointHoverRadius: 4,
-                        fill: false,
-                        order: 3
-                    }
+                    { label: '🌿 植物种群', data: [P], borderColor: '#2e7d32', borderWidth: 2.8, tension: 0.2, pointRadius: 0, fill: false, yAxisID: 'y-plant', order: 1 },
+                    { label: '🐇 雪兔种群', data: [H], borderColor: '#1e88e5', borderWidth: 2.8, tension: 0.2, pointRadius: 0, fill: false, yAxisID: 'y-prey', order: 2 },
+                    { label: '🐆 猞猁种群', data: [L], borderColor: '#e53935', borderWidth: 2.8, tension: 0.2, pointRadius: 0, fill: false, yAxisID: 'y-prey', order: 3 }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    tooltip: { 
-                        mode: 'index', 
-                        intersect: false, 
-                        backgroundColor: '#2c3e2b',
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                let val = context.raw.toFixed(1);
-                                return `${label}: ${val} 个体/面积`;
-                            }
-                        }
-                    },
-                    legend: { 
-                        position: 'top', 
-                        labels: { font: { size: 11, weight: 'bold' }, usePointStyle: true, boxWidth: 12 } 
-                    },
+                    tooltip: { mode: 'index', intersect: false, callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)} 个体/面积` } },
+                    legend: { position: 'top', labels: { font: { size: 11, weight: 'bold' }, usePointStyle: true } }
                 },
                 scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: '模拟时间 (相对单位)',
-                            color: '#3a6b3a',
-                            font: { weight: 'bold', size: 12 }
-                        },
-                        grid: { color: '#e2efda' }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: '种群密度 (个体数 / 单位面积)',
-                            color: '#2d5a2c',
-                            font: { weight: 'bold', size: 12 }
-                        },
-                        min: 0,
-                        max: 110,
-                        grid: { color: '#e2e9dc' },
-                        ticks: {
-                            stepSize: 20,
-                            callback: function(val) {
-                                return val;
-                            }
-                        }
-                    }
+                    x: { title: { display: true, text: '模拟时间 (相对单位)', color: '#3a6b3a', font: { weight: 'bold' } }, grid: { color: '#e2efda' } },
+                    'y-plant': { type: 'linear', position: 'left', title: { display: true, text: '植物种群密度', color: '#2e7d32', font: { weight: 'bold' } }, min: 0, max: 350, grid: { color: '#e2e9dc' }, ticks: { stepSize: 50, color: '#2e7d32' } },
+                    'y-prey': { type: 'linear', position: 'right', title: { display: true, text: '雪兔 / 猞猁 种群密度', color: '#1e88e5', font: { weight: 'bold' } }, min: 0, max: 100, grid: { drawOnChartArea: false }, ticks: { stepSize: 20, color: '#1e88e5' } }
                 },
                 elements: { line: { borderJoin: 'round' } }
             }
         });
         updateChart();
     }
-    
+
     function bindEvents() {
         playPauseBtn.addEventListener('click', togglePlayPause);
         startResetBtn.addEventListener('click', handleStartReset);
-        disturbPlantBtn.addEventListener('click', () => applyDisturbance('plant'));
-        disturbHareBtn.addEventListener('click', () => applyDisturbance('hare'));
-        disturbLynxBtn.addEventListener('click', () => applyDisturbance('lynx'));
-        
         infoBtn.addEventListener('click', showModal);
         closeModalBtn.addEventListener('click', hideModal);
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) hideModal();
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
+
+        // 扰动按钮绑定
+        document.querySelectorAll('.disturb-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const species = btn.getAttribute('data-species');
+                const percent = parseFloat(btn.getAttribute('data-percent'));
+                if (species && !isNaN(percent)) {
+                    applyDisturbance(species, percent);
+                }
+            });
         });
     }
-    
+
     function finalInit() {
         initChart();
         bindEvents();
         fullReset();
     }
-    
     finalInit();
 </script>
 </body>
