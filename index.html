@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>生态学教学演示：植物-雪兔-猞猁种群动态模型</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Chart.js 本地化引用（需与 HTML 文件同目录） -->
+    <script src="chart.umd.min.js"></script>
     <!-- ========================= 彩蛋：隐藏注释 ========================= -->
     <!-- 200809190820131209190405220512151605040225120914250114250919202104051420150625160726 -->
     <!-- AGPL-3.0 -->
@@ -18,8 +19,9 @@
             padding: 20px;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
         .dashboard {
             max-width: 1400px;
@@ -183,11 +185,19 @@
             border-top: 8px solid #8bc34a;
         }
         .close-modal { background: #2c5e3a; color: white; border: none; padding: 8px 24px; border-radius: 40px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8a9c7c;
+            letter-spacing: 0.5px;
+        }
         @media (max-width: 780px) {
             .dashboard { padding: 1rem; }
             h1 { font-size: 1.5rem; }
             .button-row { gap: 0.4rem; }
             .disturb-btn { padding: 5px 8px; font-size: 0.8rem; }
+            .footer { font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -273,6 +283,8 @@
         <button class="close-modal" id="closeModalBtn">关闭</button>
     </div>
 </div>
+
+ 
 
 <script>
     // 修正参数：雪兔始终高于猞猁，保持相位正确
@@ -487,7 +499,6 @@
         closeModalBtn.addEventListener('click', hideModal);
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
 
-        // 扰动按钮绑定
         document.querySelectorAll('.disturb-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const species = btn.getAttribute('data-species');
@@ -505,6 +516,10 @@
         fullReset();
     }
     finalInit();
+
+    // 控制台可见内容
+    console.log("https://gitee.com/lin_Yanyi/Plant-Hare-Lynx-Ecosystem-Simulator");
+    console.log("项目制作者：林炎逸 刘子木");
 </script>
 </body>
 </html>
